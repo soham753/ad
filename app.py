@@ -1,17 +1,12 @@
-import threading
-import time
-from models.eventlog import check_event_logs
-from models.registry import check_registry
+from werkzeug.security import check_password_hash
+from config import USERS
 
-def monitor_logs():
-    while True:
-        anomalies = check_event_logs() + check_registry()
-        if anomalies:
-            print(f"Anomalies detected: {anomalies}")
-        time.sleep(10)  # Check every 10 seconds
+def authenticate_user(username, password):
+    # Replace with your user database or file-based user storage
+    users = {
+        "admin": {"password": "hashed_password_here"}
+    }
 
-def start_monitoring():
-    thread = threading.Thread(target=monitor_logs)
-    thread.daemon = True
-    thread.start()
-
+    if username in users:
+        return check_password_hash(users[username]["password"], password)
+    return False
