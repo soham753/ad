@@ -1,12 +1,5 @@
-from werkzeug.security import check_password_hash
-from config import USERS
 
-def authenticate_user(username, password):
-    # Replace with your user database or file-based user storage
-    users = {
-        "admin": {"password": "hashed_password_here"}
-    }
+npx create-react-app frontend
 
-    if username in users:
-        return check_password_hash(users[username]["password"], password)
-    return False
+cd frontend
+npm install axios react-router-dom chart.js react-chartjs-2
