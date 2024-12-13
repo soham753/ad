@@ -1,30 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import Login from './Login';
+import { Line } from 'react-chartjs-2';
 
-function App() {
-  const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
+function Dashboard({ authToken }) {
+  const [anomalies, setAnomalies] = useState([]);
 
   useEffect(() => {
-    if (!authToken) {
-      window.location.href = '/login';
-    }
+    Axios.get('http://127.0.0.1:5000/api/anomalies', {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+      .then((response) => setAnomalies(response.data.anomalies))
+      .catch((error) => console.log(error));
   }, [authToken]);
 
+  const chartData = {
+    labels: ['0', '1', '2', '3', '4'],
+    datasets: [
+      {
+        label: 'Failed Logins',
+        data: anomalies, // Your data here
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+      },
+    ],
+  };
+
   return (
-    <Router>
-      <Switch>
-        <Route path="/login">
-          <Login setAuthToken={setAuthToken} />
-        </Route>
-        <Route path="/dashboard">
-          <Dashboard authToken={authToken} />
-        </Route>
-      </Switch>
-    </Router>
+    <div>
+      <h2>Anomalies Detected</h2>
+      <Line data={chartData} />
+      <ul>
+        {anomalies.map((anomaly, index) => (
+          <li key={index}>{anomaly}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
-export default App;
+export default Dashboard;
+
