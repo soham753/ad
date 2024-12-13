@@ -1,23 +1,7 @@
-/* src/App.css */
+/* src/Dashboard.css */
 
-/* Basic reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Body styling */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  margin: 0;
-  padding: 0;
-}
-
-/* Main container for the app */
-.app-container {
+/* Dashboard container */
+.dashboard-container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -26,49 +10,86 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Header styling */
-header {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 0;
+/* Title for the dashboard */
+.dashboard-container h2 {
   text-align: center;
-  font-size: 24px;
+  margin-bottom: 20px;
+  font-size: 28px;
   font-weight: bold;
 }
 
-/* Button styles */
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
+/* List for detected anomalies */
+.anomaly-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.anomaly-list li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 10px;
   border-radius: 5px;
 }
 
-button:hover {
-  background-color: #0056b3;
+.anomaly-list li span {
+  font-weight: bold;
 }
 
-/* Container for the chart */
-.chart-container {
+/* Anomaly notification banner */
+.anomaly-notification {
+  padding: 10px;
+  background-color: #ffcc00;
+  border: 1px solid #ff9900;
+  border-radius: 5px;
   margin-top: 20px;
+  font-weight: bold;
+}
+
+.anomaly-notification.warning {
+  background-color: #ff9900;
+  border-color: #ff6600;
+}
+
+/* Styling for the chart container */
+.chart-container {
+  margin-top: 30px;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h3 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* Utility classes */
-.text-center {
-  text-align: center;
-}
-
-.margin-top-20 {
+/* Styling for buttons on the dashboard */
+.dashboard-buttons {
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
+}
+
+.dashboard-buttons button {
+  margin-right: 10px;
+  padding: 12px 25px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.dashboard-buttons button.start {
+  background-color: #28a745;
+  color: white;
+}
+
+.dashboard-buttons button.start:hover {
+  background-color: #218838;
+}
+
+.dashboard-buttons button.stop {
+  background-color: #dc3545;
+  color: white;
+}
+
+.dashboard-buttons button.stop:hover {
+  background-color: #c82333;
 }
