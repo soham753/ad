@@ -1,29 +1,30 @@
-// src/AnomalyChart.js
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS } from 'chart.js/auto'; // Required to register all components of Chart.js
+// src/api.js
+import Axios from 'axios';
 
-function AnomalyChart({ anomalies }) {
-  // Format the data for the chart
-  const chartData = {
-    labels: anomalies.map((anomaly, index) => `Time ${index + 1}`), // Label the time based on anomaly index
-    datasets: [
-      {
-        label: 'Detected Anomalies',
-        data: anomalies.map((anomaly) => anomaly.count), // Example: anomaly count (you can adjust this)
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
+// Define the base URL for the backend API
+const API_BASE_URL = 'http://127.0.0.1:5000';
+
+// Function to fetch anomalies from the backend
+export const fetchAnomalies = async (authToken) => {
+  try {
+    const response = await Axios.get(`${API_BASE_URL}/api/anomalies`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
       },
-    ],
-  };
+    });
+    return response.data.anomalies;
+  } catch (error) {
+    console.error("Error fetching anomalies:", error);
+    throw error;
+  }
+};
 
-  return (
-    <div className="chart-container">
-      <h3>Anomaly Detection Chart</h3>
-      <Line data={chartData} />
-    </div>
-  );
-}
-
-export default AnomalyChart;
+// Function to start monitoring anomalies (background job)
+export const startMonitoring = async () => {
+  try {
+    await Axios.post(`${API_BASE_URL}/start-monitoring`);
+    console.log("Monitoring started successfully!");
+  } catch (error) {
+    console.error("Error starting monitoring:", error);
+  }
+};
