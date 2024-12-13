@@ -1,17 +1,22 @@
-import winreg
+import logging
+import smtplib
+from email.mime.text import MIMEText
+from config import SMTP_SERVER, SMTP_PORT, SMTP_USER, SMTP_PASSWORD
 
-def check_registry():
-    key = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
-    suspicious_registry = []
+def log_anomalies(anomalies):
+    for anomaly in anomalies:
+        logging.info(anomaly)
+
+def send_email_alert(message):
+    msg = MIMEText(message)
+    msg['Subject'] = 'Anomaly Detected in Windows Logs'
+    msg['From'] = SMTP_USER
+    msg['To'] = 'admin@example.com'
 
     try:
-        registry = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key)
-        for i in range(0, winreg.QueryInfoKey(registry)[1]):
-            name, value, _ = winreg.EnumValue(registry, i)
-            if "malware" in name.lower() or "suspicious" in value.lower():
-                suspicious_registry.append(f"Suspicious registry entry: {name} = {value}")
-        winreg.CloseKey(registry)
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.login(SMTP_USER, SMTP_PASSWORD)
+            server.sendmail(msg['From'], [msg['To']], msg.as_string())
+            print(f"Alert sent: {message}")
     except Exception as e:
-        print(f"Error reading registry: {e}")
-
-    return suspicious_registry
+        print(f"Error sending email: {e}")
