@@ -1,43 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Axios from 'axios';
-import { Line } from 'react-chartjs-2';
 
-function Dashboard({ authToken }) {
-  const [anomalies, setAnomalies] = useState([]);
+function Login({ setAuthToken }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    Axios.get('http://127.0.0.1:5000/api/anomalies', {
-      headers: { Authorization: `Bearer ${authToken}` },
-    })
-      .then((response) => setAnomalies(response.data.anomalies))
-      .catch((error) => console.log(error));
-  }, [authToken]);
-
-  const chartData = {
-    labels: ['0', '1', '2', '3', '4'],
-    datasets: [
-      {
-        label: 'Failed Logins',
-        data: anomalies, // Your data here
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
-      },
-    ],
+  const handleLogin = () => {
+    Axios.post('http://127.0.0.1:5000/login', { username, password })
+      .then((response) => {
+        localStorage.setItem('authToken', response.data.access_token);
+        setAuthToken(response.data.access_token);
+        window.location.href = '/dashboard';
+      })
+      .catch((error) => alert('Login failed!'));
   };
 
   return (
     <div>
-      <h2>Anomalies Detected</h2>
-      <Line data={chartData} />
-      <ul>
-        {anomalies.map((anomaly, index) => (
-          <li key={index}>{anomaly}</li>
-        ))}
-      </ul>
+      <h2>Login</h2>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 }
 
-export default Dashboard;
-
+export default Login;
